@@ -1,4 +1,4 @@
-# 🧠 Segundo Parcial – Paradigmas de Programación
+# Segundo Parcial – Paradigmas de Programación
 
 Este repositorio contiene las soluciones desarrolladas para el **Segundo Parcial** de la asignatura **Paradigmas de Programación**, aplicando distintos enfoques: **Agentes** y **Programación Orientada a Objetos (POO)**.
 
@@ -6,9 +6,9 @@ Este repositorio contiene las soluciones desarrolladas para el **Segundo Parcial
 
 ## Tabla de Contenidos
 
-1. [Perceptrón con Paradigma de Agentes (Python + MESA)](#1-perceptrón-con-paradigma-de-agentes-python--mesa)  
+1. [Perceptrón con Paradigma de Agentes (Python + MESA)]
 
-3. [Calculadora Científica con POO (Kotlin)](#3-calculadora-científica-con-poo-kotlin)
+3. [Calculadora Científica con POO (Kotlin)]
 
 ---
 
@@ -19,13 +19,6 @@ Incluye interfaz gráfica con controles para la **tasa de aprendizaje** y el **n
 
 ---
 
-## 2. Calculadora Basada en Agentes (Python + MESA)
-
-Implementación de una **calculadora distribuida** donde cada operación (suma, resta, multiplicación, división, potencia) es gestionada por un **agente independiente**.  
-Los agentes cooperan entre sí para resolver expresiones matemáticas complejas respetando la **precedencia de operadores**.
-
----
-
 ## 3. Calculadora Científica con POO (Kotlin)
 
 Desarrollo de una **calculadora científica orientada a objetos**, aplicando **encapsulamiento**, **herencia** y **polimorfismo**.  
@@ -33,6 +26,6 @@ Permite realizar operaciones básicas y científicas (trigonométricas, logarít
 
 ---
 
-**Autor:** Hinata Hajime  
+**Autor:** Juan Correa
 **Materia:** Paradigmas de Programación  
 **Periodo:** 2025-II
