@@ -19,7 +19,7 @@ Incluye interfaz gráfica con controles para la **tasa de aprendizaje** y el **n
 
 ---
 
-## 3. Calculadora Científica con POO (Kotlin)
+## 2 . Calculadora Científica con POO (Kotlin)
 
 Desarrollo de una **calculadora científica orientada a objetos**, aplicando **encapsulamiento**, **herencia** y **polimorfismo**.  
 Permite realizar operaciones básicas y científicas (trigonométricas, logarítmicas, potencias, memoria), con manejo de errores y evaluación de expresiones completas.
