@@ -1,0 +1,257 @@
+import kotlin.math.*
+
+// ---------------- Base Calculator ----------------
+open class Calculator(var value: Double = 0.0) {
+
+    private var memory: Double = 0.0
+
+    fun sum(A: Double, B: Double): Double = A + B
+    fun sub(A: Double, B: Double): Double = A - B
+    fun mul(A: Double, B: Double): Double = A * B
+
+    fun div(A: Double, B: Double): Double {
+        if (B == 0.0) {
+            println("MathERROR: Division by zero")
+            return Double.NaN
+        }
+        return A / B
+    }
+
+    // Polymorfismo
+    operator fun plus(other: Calculator): Calculator {
+        return Calculator(this.value + other.value)
+    }
+
+    operator fun minus(other: Calculator): Calculator {
+        return Calculator(this.value - other.value)
+    }
+
+    operator fun times(other: Calculator): Calculator {
+        return Calculator(this.value * other.value)
+    }
+
+    operator fun div(other: Calculator): Calculator {
+        if (other.value == 0.0) {
+            println("MathERROR: Division by zero")
+            return Calculator(Double.NaN)
+        }
+        return Calculator(this.value / other.value)
+    }
+
+    // Memoria
+    fun Mplus(v: Double) { memory += v }
+    fun Mminus(v: Double) { memory -= v }
+    fun MR(): Double = memory
+    fun clearMemory() { memory = 0.0 }
+}
+
+// ---------------- Scientific Calculator ----------------
+class ScientificCalculator(value: Double = 0.0) : Calculator(value) {
+
+    // Trig (deg)
+    fun sinDeg(angleDeg: Double): Double = sin(Math.toRadians(angleDeg))
+    fun cosDeg(angleDeg: Double): Double = cos(Math.toRadians(angleDeg))
+    fun tanDeg(angleDeg: Double): Double = tan(Math.toRadians(angleDeg))
+
+    // Trig (rad)
+    fun sinRad(angleRad: Double): Double = sin(angleRad)
+    fun cosRad(angleRad: Double): Double = cos(angleRad)
+    fun tanRad(angleRad: Double): Double = tan(angleRad)
+
+    fun pow(base: Double, exponent: Double): Double = base.pow(exponent)
+
+    fun sqrt(value: Double, n: Double): Double {
+        if (n == 0.0) {
+            println("MathERROR: root degree cannot be 0")
+            return Double.NaN
+        }
+        if (value < 0.0) {
+            println("MathERROR: negative value not allowed for non i n-th roots")
+            return Double.NaN
+        }
+        return value.pow(1.0 / n)
+    }
+
+    fun log10(value: Double): Double {
+        if (value <= 0.0) {
+            println("MathERROR: log10 domain error (value must be > 0)")
+            return Double.NaN
+        }
+        return log10(value)
+    }
+
+    fun ln(value: Double): Double {
+        if (value <= 0.0) {
+            println("MathERROR: ln domain error (value must be > 0)")
+            return Double.NaN
+        }
+        return ln(value)
+    }
+
+    fun toDeg(radians: Double): Double = Math.toDegrees(radians)
+    fun toRad(degrees: Double): Double = Math.toRadians(degrees)
+
+    // ---------------- Expression evaluator (PEMDAS) ----------------
+    fun evaluateExpression(expr: String): Double {
+        // Tokenization
+        val s = expr.replace("\\s+".toRegex(), "")
+        val n = s.length
+        val values = ArrayDeque<Double>()   // stack num
+        val ops = ArrayDeque<Char>()       // stack ops
+
+        fun precedence(op: Char): Int = when (op) {
+            '+', '-' -> 1
+            '*', '/' -> 2
+            '^' -> 3
+            else -> 0
+        }
+
+        fun isRightAssociative(op: Char): Boolean = (op == '^')
+
+        fun applyOp(op: Char): Boolean {
+            if (values.size < 2) {
+                println("MathERROR: Not enough operands for operator '$op'")
+                return false
+            }
+            val b = values.removeLast()
+            val a = values.removeLast()
+            val res = when (op) {
+                '+' -> a + b
+                '-' -> a - b
+                '*' -> a * b
+                '/' -> {
+                    if (b == 0.0) {
+                        println("MathERROR: Division by zero")
+                        Double.NaN
+                    } else a / b
+                }
+                '^' -> a.pow(b)
+                else -> {
+                    println("MathERROR: Unknown operator '$op'")
+                    Double.NaN
+                }
+            }
+            values.addLast(res)
+            return true
+        }
+
+        var i = 0
+        while (i < n) {
+            val c = s[i]
+
+            // Manejo de . y -
+            if (c.isDigit() || c == '.' || (c == '-' && (
+                        i == 0 || s[i - 1] == '(' || s[i - 1] == '+' || s[i - 1] == '-' || s[i - 1] == '*' || s[i - 1] == '/' || s[i - 1] == '^'
+                    ) && i + 1 < n && (s[i + 1].isDigit() || s[i + 1] == '.'))
+            ) {
+                var numStr = ""
+                if (c == '-') {
+                    numStr += '-'
+                    i++
+                }
+                while (i < n && (s[i].isDigit() || s[i] == '.')) {
+                    numStr += s[i]
+                    i++
+                }
+                try {
+                    val d = numStr.toDouble()
+                    values.addLast(d)
+                } catch (e: NumberFormatException) {
+                    println("MathERROR: Invalid number '$numStr'")
+                    return Double.NaN
+                }
+                continue
+            }
+
+            when (c) {
+                '(' -> ops.addLast(c)
+                ')' -> {
+                    while (ops.isNotEmpty() && ops.last() != '(') {
+                        val op = ops.removeLast()
+                        if (!applyOp(op)) return Double.NaN
+                    }
+                    if (ops.isEmpty() || ops.last() != '(') {
+                        println("MathERROR: Mismatched parentheses")
+                        return Double.NaN
+                    }
+                    ops.removeLast()
+                }
+
+                '+', '-', '*', '/', '^' -> {
+                    while (ops.isNotEmpty() && ops.last() != '(') {
+                        val top = ops.last()
+                        val topPrec = precedence(top)
+                        val currPrec = precedence(c)
+
+                        val shouldPop = when {
+                            topPrec > currPrec -> true
+                            topPrec < currPrec -> false
+                            else -> {
+                                // Manejo de operadores asociados a derecha
+                                !isRightAssociative(c)
+                            }
+                        }
+
+                        if (shouldPop) {
+                            val op = ops.removeLast()
+                            if (!applyOp(op)) return Double.NaN
+                        } else {
+                            break
+                        }
+                    }
+                    ops.addLast(c)
+                }
+
+                else -> {
+                    println("MathERROR: Invalid character '$c' in expression")
+                    return Double.NaN
+                }
+            }
+            i++
+        }
+
+        while (ops.isNotEmpty()) {
+            val op = ops.removeLast()
+            if (op == '(' || op == ')') {
+                println("MathERROR: Mismatched parentheses")
+                return Double.NaN
+            }
+            if (!applyOp(op)) return Double.NaN
+        }
+
+        if (values.size != 1) {
+            println("MathERROR: Expression evaluation ended with ${values.size} values on the stack")
+            return Double.NaN
+        }
+        return values.removeLast()
+    }
+}
+
+// ---------------- Example usage & tests ----------------
+fun main() {
+    val sci = ScientificCalculator()
+
+    // operator overloading demo
+    val c1 = Calculator(10.0)
+    val c2 = Calculator(5.0)
+    val c3 = c1 + c2
+    println("c1 + c2 = ${c3.value}") // 15.0
+
+    // tests (PEMDAS)
+    val expressions = listOf(
+        "3 + 4 * 2 / (1 - 5) ^ 2",   // classic -> 3.5
+        "2 ^ 3 ^ 2",                 // right-associative -> 2^(3^2) = 512
+        "-3 + 5",                    // unary minus -> 2
+        "2 * -3 + 4",                // unary minus after * -> -6 + 4 = -2
+        "3 + 4 * 2",                 // 11
+        "(2+3) * 4",                 // 20
+        "10 / (2 + 3)",              // 2
+        "3.5 + 2.1",                 // 5.6 (decimals)
+        "2 ^ (1 + 2)"                // 8
+    )
+
+    for (e in expressions) {
+        val r = sci.evaluateExpression(e)
+        println("Expr: '$e' => $r")
+    }
+}
