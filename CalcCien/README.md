@@ -61,5 +61,5 @@ val result = c1 + c2  // usa sobrecarga de operadores
 ## Manera de ejecucion
 
 - **Acceda al siguiente link:** https://pl.kotl.in/4XJNVzrox?theme=darcula
-- **Clickee el icono de la parte superior derecha
-- **Desplácese hacia abajo en la página y verifique el terminal.
+- Clickee el icono de la parte superior derecha
+- Desplácese hacia abajo en la página y verifique el terminal.
