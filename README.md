@@ -7,7 +7,7 @@ Este repositorio contiene las soluciones desarrolladas para el **Segundo Parcial
 ## Tabla de Contenidos
 
 1. [Perceptrón con Paradigma de Agentes (Python + MESA)](#1-perceptrón-con-paradigma-de-agentes-python--mesa)  
-2. [Calculadora Basada en Agentes (Python + MESA)](#2-calculadora-basada-en-agentes-python--mesa)  
+
 3. [Calculadora Científica con POO (Kotlin)](#3-calculadora-científica-con-poo-kotlin)
 
 ---
